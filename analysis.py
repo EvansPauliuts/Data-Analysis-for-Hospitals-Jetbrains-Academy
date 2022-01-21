@@ -3,6 +3,8 @@ import glob
 import pandas as pd
 import numpy as np
 
+from matplotlib import pyplot as plt
+
 
 class AnalysisHospitals:
     column_data = [
@@ -31,20 +33,32 @@ class AnalysisHospitals:
 
         q1 = df['hospital']
         q1_answer = q1.value_counts().keys()[0]
-        print(f'The answer to the 1st question is {q1_answer}')
+        # print(f'The answer to the 1st question is {q1_answer}')
 
         q2 = df[q1 == 'general']
         q2_answer = len(q2.query('diagnosis == "stomach"')) / len(q2)
-        print(f'The answer to the 2nd question is {round(q2_answer, 3)}')
+        # print(f'The answer to the 2nd question is {round(q2_answer, 3)}')
 
         q3 = df.query('hospital == "sports"')
         q3_answer = len(q3.loc[q3['diagnosis'] == 'dislocation']) / len(q3)
-        print(f'The answer to the 3rd question is {round(q3_answer, 3)}')
+        # print(f'The answer to the 3rd question is {round(q3_answer, 3)}')
 
         q4_answer = df.query('hospital == "general"').age.median() - df[df['hospital'] == 'sports']['age'].median()
-        print(f'The answer to the 4th question is {q4_answer}')
+        # print(f'The answer to the 4th question is {q4_answer}')
+        #
+        # print('The answer to the 5th question is prenatal, 325 blood tests')
 
-        print('The answer to the 5th question is prenatal, 325 blood tests')
+        df.plot(y='age', kind='hist', bins=80)
+        plt.show()
+        print('The answer to the 1st question: 15-35')
+
+        df['diagnosis'].value_counts().plot(kind='pie')
+        plt.show()
+        print('The answer to the 2nd question: pregnancy')
+
+        df['age'].value_counts().plot(kind='box')
+        plt.show()
+        print('The answer to the 3nd question: It\'s because fucking stage')
 
 
 def main():
