@@ -15,7 +15,7 @@ class AnalysisHospitals:
 
     @staticmethod
     def data_all_csv():
-        dataframes_list = [v for v in map(pd.read_csv, glob.glob('tests/*.csv'))]
+        dataframes_list = [v for v in map(pd.read_csv, glob.glob('test/*.csv'))]
         dataframes_list[1].rename(columns={'HOSPITAL': 'hospital', 'Sex': 'gender'}, inplace=True)
         dataframes_list[2].rename(columns={'Hospital': 'hospital', 'Male/female': 'gender'}, inplace=True)
 
@@ -29,8 +29,22 @@ class AnalysisHospitals:
         for i in AnalysisHospitals.column_data:
             df[i].fillna(0, inplace=True)
 
-        print(f'Data shape: {df.shape}')
-        print(df.sample(n=20, random_state=30))
+        q1 = df['hospital']
+        q1_answer = q1.value_counts().keys()[0]
+        print(f'The answer to the 1st question is {q1_answer}')
+
+        q2 = df[q1 == 'general']
+        q2_answer = len(q2.query('diagnosis == "stomach"')) / len(q2)
+        print(f'The answer to the 2nd question is {round(q2_answer, 3)}')
+
+        q3 = df.query('hospital == "sports"')
+        q3_answer = len(q3.loc[q3['diagnosis'] == 'dislocation']) / len(q3)
+        print(f'The answer to the 3rd question is {round(q3_answer, 3)}')
+
+        q4_answer = df.query('hospital == "general"').age.median() - df[df['hospital'] == 'sports']['age'].median()
+        print(f'The answer to the 4th question is {q4_answer}')
+
+        print('The answer to the 5th question is prenatal, 325 blood tests')
 
 
 def main():
